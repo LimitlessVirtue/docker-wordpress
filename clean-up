@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+
+docker system prune -a
