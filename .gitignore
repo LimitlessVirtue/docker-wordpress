@@ -1,3 +1,4 @@
 Q.DS_Store
 /.idea
-local/
+bitnami/mariadb
+bitnami/wordpress
