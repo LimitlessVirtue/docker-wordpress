@@ -2,3 +2,4 @@ Q.DS_Store
 /.idea
 bitnami/mariadb
 bitnami/wordpress
+bitnami/php
