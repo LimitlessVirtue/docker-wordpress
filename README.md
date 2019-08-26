@@ -1,14 +1,26 @@
+# WordPress plugin or theme development with Docker Compose
+
+
+https://limitlessv.com/docker/install-wordpress-with-docker-compose/
+
+
+Example to .env file:
+```
+MYSQL_ROOT_PASSWORD=password
+MYSQL_DATABASE=wordpress
+MYSQL_USER=user
+MYSQL_PASSWORD=password
+ALLOW_EMPTY_PASSWORD=1
+WORDPRESS_TABLE_PREFIX=wp_
+
+```
+
 # What is WordPress?
 
 > WordPress is one of the most versatile open source content management systems on the market. WordPress is built for high performance and is scalable to many servers, has easy integration via REST, JSON, SOAP and other formats, and features a whopping 15,000 plugins to extend and customize the application for just about any type of website.
 
 https://www.wordpress.org/
 
-# Based on bitnami-docker-wordpress
-https://github.com/bitnami/bitnami-docker-wordpress
-
-
-Insperation:
 
 
 # License

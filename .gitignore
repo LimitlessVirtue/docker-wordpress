@@ -1,5 +1,5 @@
 Q.DS_Store
+.env
 /.idea
-bitnami/mariadb
-bitnami/wordpress
-bitnami/php
+/var/*
+/htdocs/*

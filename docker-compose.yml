@@ -1,34 +1,91 @@
-version: '2'
+version: '3'
 services:
-  mariadb:
-    image: 'bitnami/mariadb:latest'
+  # MySQL Service
+  db:
+    image: mysql:5.7
+    env_file: .env
     volumes:
-      - ./bitnami/mariadb:/bitnami/mariadb
-      - mariadb_data:/bitnami
+      #- ./var/lib/mysql:/var/lib/mysql
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
     environment:
-      - MARIADB_USER=bn_wordpress
-      - MARIADB_DATABASE=bitnami_wordpress
-      - ALLOW_EMPTY_PASSWORD=yes
-  wordpress:
-    image: 'bitnami/wordpress:latest'
-    labels:
-      kompose.service.type: nodeport
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      ALLOW_EMPTY_PASSWORD: $ALLOW_EMPTY_PASSWORD
+    expose:
+      - "3306"
     ports:
-      - '80:80'
-      - '443:443'
-    volumes:
-      - ./bitnami/wordpress:/bitnami/wordpress
-      - wordpress_data:/bitnami
+      - "3306:3306"
+    networks:
+      - app-network
+
+  # WordPress Service
+  wordpress:
+    image: wordpress:latest
+    env_file: .env
     depends_on:
-      - mariadb
+      - db
+    restart: always
+    volumes:
+      - ./htdocs/:/var/www/html
+      - ./etc/php/php.ini:/usr/local/etc/php/php.ini
+      - ./opt/limitlessv/:/opt/limitlessv
     environment:
-      - MARIADB_HOST=mariadb
-      - MARIADB_PORT_NUMBER=3306
-      - WORDPRESS_DATABASE_USER=bn_wordpress
-      - WORDPRESS_DATABASE_NAME=bitnami_wordpress
-      - ALLOW_EMPTY_PASSWORD=yes
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=$MYSQL_USER
+      - WORDPRESS_DB_PASSWORD=$MYSQL_PASSWORD
+      - WORDPRESS_DB_NAME=$MYSQL_DATABASE
+      - WORDPRESS_TABLE_PREFIX=$WORDPRESS_TABLE_PREFIX
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - app-network
+
+  # PhpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    env_file: .env
+    environment:
+      - PMA_HOST=db:3306
+      - PMA_USER=root
+      - PMA_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
+      - ALLOW_EMPTY_PASSWORD=$ALLOW_EMPTY_PASSWORD
+    expose:
+      - "8080"
+    ports:
+      - 8080:80
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  #
+  mailhog:
+    image: mailhog/mailhog
+    expose:
+      - "1025"
+      - "8025"
+    ports:
+      - 1025:1025 # SMTP server
+      - 8025:8025 # web ui
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
+
+#Volumes
 volumes:
-  mariadb_data:
-    driver: local
-  wordpress_data:
+  db_data:
     driver: local
