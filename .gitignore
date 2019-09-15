@@ -3,3 +3,4 @@ Q.DS_Store
 /.idea
 /var/*
 /htdocs/*
+/sql-dump/*
