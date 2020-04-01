@@ -1,8 +1,7 @@
 # WordPress plugin or theme development with Docker Compose
 
 
-https://limitlessv.com/docker/install-wordpress-with-docker-compose/
-
+https://limitlessv.com/blog/local-wordpress-development-with-docker-and-docker-compose/
 
 Example to .env file:
 ```
